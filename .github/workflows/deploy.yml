@@ -1,51 +1,67 @@
-name: Deploy to Elastic Beanstalk
+name: CI-CD Pipeline with SonarQube + ZAP + AWS EB
 
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
-  deploy:
-    name: Deploy Application
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      # Install Python for packaging
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
 
-      # Install dependencies (optional but good practice)
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      # Create deployment package
-      - name: Create ZIP package
-        run: |
-          zip -r deploy.zip . -x "env/*"
+    # ---- SonarQube Scan ----
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      # Configure AWS credentials (temporary credentials from Cloud9)
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ secrets.AWS_REGION }}
+    # ---- OWASP ZAP Security Scan ----
+    - name: OWASP ZAP Baseline Scan
+      uses: zaproxy/action-baseline@v0.6.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        target: "http://localhost:8000"
+      continue-on-error: true
 
-      # Deploy to Elastic Beanstalk
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v22
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ${{ secrets.EB_APP_NAME }}
-          environment_name: ${{ secrets.EB_ENV_NAME }}
-          version_label: v-${{ github.run_number }}
-          region: ${{ secrets.AWS_REGION }}
-          deployment_package: deploy.zip
+    # ---- Package Application ----
+    - name: Create deployment package
+      run: |
+        zip -r deploy.zip . -x "*.git*"
+
+    # ---- Configure AWS ----
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # ---- Deploy to Elastic Beanstalk ----
+    - name: Deploy to Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v22
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
+        application_name: ${{ secrets.EB_APP_NAME }}
+        environment_name: ${{ secrets.EB_ENV_NAME }}
+        region: ${{ secrets.AWS_REGION }}
+        version_label: "deploy-${{ github.run_number }}"
+        deployment_package: deploy.zip
