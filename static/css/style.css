@@ -1,0 +1,50 @@
+/* Centered transparent white block */
+.booking-form-container {
+    width: 60%;
+    margin: 40px auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    padding: 30px;
+    border-radius: 14px;
+}
+
+/* Form fields grouped nicely */
+.form-fields {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Labels readable */
+.form-label {
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 0 3px #000;
+}
+
+/* Transparent fields */
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(4px);
+    color: #000;
+    font-weight: 500;
+}
+
+/* Notes small height */
+textarea {
+    height: 40px !important;
+    resize: none !important;
+}
+
+/* Background full page */
+body {
+    background-image: url("https://images.unsplash.com/photo-1502877338535-766e1452684a");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
