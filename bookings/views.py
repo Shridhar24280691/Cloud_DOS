@@ -24,7 +24,6 @@ def signup(request):
 
 
 # ---------- BOOKING VIEWS ----------
-
 @login_required
 def booking_list(request):
     """
