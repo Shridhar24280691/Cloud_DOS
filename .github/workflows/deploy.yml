@@ -29,13 +29,8 @@ jobs:
 
  
       #  SonarQube scan
-      - name: Use Node 20 for SonarCloud
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v2.0.0
+      - name: SonarCloud Scan (Node 18 compatible)
+        uses: SonarSource/sonarqube-scan-action@v1.7.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -43,6 +38,7 @@ jobs:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONAR_ORG_KEY }}
+
 
       - name: Create deployment package
         run: |
