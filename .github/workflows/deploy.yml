@@ -34,7 +34,7 @@ jobs:
           java-version: '17'
  
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2.1.0
+        uses: SonarSource/sonarcloud-github-action@v1.9
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
