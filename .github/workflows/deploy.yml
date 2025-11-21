@@ -61,7 +61,7 @@ jobs:
           version_label: v-${{ github.run_number }}
           region: ${{ secrets.AWS_REGION }}
           deployment_package: deploy.zip
-          bucket_name: elasticbeanstalk-us-east-1-844028821119
+          existing_bucket_namee: elasticbeanstalk-us-east-1-844028821119
           wait_for_deployment: true
 
 
