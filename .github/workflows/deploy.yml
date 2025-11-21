@@ -29,7 +29,11 @@ jobs:
 
  
       #  SonarQube scan
-   
+      - name: Use Node 20 for SonarCloud
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2.0.0
         env:
