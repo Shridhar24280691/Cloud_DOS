@@ -28,16 +28,16 @@ jobs:
           nohup python manage.py runserver 0.0.0.0:8080 & sleep 10
 
  
-      #  SonarQube scan
-      - name: SonarCloud Scan (Node 18 compatible)
-        uses: SonarSource/sonarqube-scan-action@v1.7.0
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.9
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONAR_ORG_KEY }}
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+
 
 
       - name: Create deployment package
