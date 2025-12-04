@@ -6,6 +6,11 @@ files:
     destination: /home/ec2-user/car_app
 
 hooks:
+  ApplicationStop:
+    - location: scripts/stop.sh
+      timeout: 60
+      runas: ec2-user
+
   BeforeInstall:
     - location: scripts/clean.sh
       timeout: 300
@@ -18,10 +23,5 @@ hooks:
 
   ApplicationStart:
     - location: scripts/start.sh
-      timeout: 300
-      runas: ec2-user
-
-  ApplicationStop:
-    - location: scripts/stop.sh
       timeout: 300
       runas: ec2-user
