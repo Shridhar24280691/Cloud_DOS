@@ -1,3 +1,2 @@
 #!/bin/bash
-echo "No service to stop"
-exit 0
+pkill -f "manage.py"
