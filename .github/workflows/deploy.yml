@@ -38,7 +38,6 @@ jobs:
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
 
 
-
       - name: Create deployment package
         run: |
           zip -r deploy.zip . -x '*.git*' '*.github*' '__pycache__*'
