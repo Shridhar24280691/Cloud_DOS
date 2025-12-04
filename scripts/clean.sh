@@ -1,3 +1,2 @@
 #!/bin/bash
-rm -rf /var/www/car_app/*
-mkdir -p /var/www/car_app
+rm -rf /home/ec2-user/car_app/*
