@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key-change-in-produ
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ["*"]  # For development and EBS; restrict later if needed
+ALLOWED_HOSTS = ["*"] 
 
 INSTALLED_APPS = [
     "django.contrib.admin",
