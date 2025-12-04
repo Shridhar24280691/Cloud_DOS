@@ -1,4 +1,3 @@
 #!/bin/bash
-pkill -f "manage.py" || true
-echo "Stop step completed."
+pkill -f "manage.py"
 exit 0
