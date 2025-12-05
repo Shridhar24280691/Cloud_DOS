@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-
+from django.http import JsonResponse
 from .models import Booking
 from .forms import BookingForm   # assume you already have this
 from django.contrib.auth.forms import UserCreationForm
 
+
+def health(request):
+    return JsonResponse({"status": "ok"})
 
 # ---------- AUTH VIEWS (SIGNUP ONLY, LOGIN IS BUILT-IN) ----------
 
