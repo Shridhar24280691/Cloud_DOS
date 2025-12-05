@@ -49,11 +49,11 @@ def booking_list(request):
     Booking list.
     """
     if request.user.is_staff or request.user.is_superuser:
-        bookings = Booking.objects.all().order_by("-preferred_date", "-preferred_time")
+        bookings = Booking.objects.all().order_by("-preferred_date", "-preferred_time_slot__start_time")
     else:
         bookings = Booking.objects.filter(user=request.user).order_by(
             "-preferred_date",
-            "-preferred_time",
+            "-preferred_time_slot__start_time",
         )
 
     return render(request, "bookings/booking_list.html", {"bookings": bookings})

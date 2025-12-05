@@ -7,11 +7,6 @@ class BookingForm(forms.ModelForm):
     preferred_date = forms.DateField(
     widget=forms.DateInput(attrs={"type": "date"})
     )
-
-    preferred_time = forms.TimeField(
-    widget=forms.TimeInput(attrs={"type": "time"})
-    )
-
     
     
     class Meta:
@@ -23,7 +18,7 @@ class BookingForm(forms.ModelForm):
             "car_model",
             "service_type",
             "preferred_date",
-            "preferred_time",
+            "preferred_time_slot",
             "notes",
         ]
 
