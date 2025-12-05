@@ -10,12 +10,6 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ["car-detailing-app-env.eba-ecj6emch.us-east-1.elasticbeanstalk.com", "12a82297e2654fe8a75ff5b45ac565ad.vfs.cloud9.us-east-1.amazonaws.com"] 
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://car-detailing-app-env.eba-ecj6emch.us-east-1.elasticbeanstalk.com",
-    "https://12a82297e2654fe8a75ff5b45ac565ad.vfs.cloud9.us-east-1.amazonaws.com"
-]
-
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -24,11 +18,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bookings",
-    "csp",
 ]
 
 MIDDLEWARE = [
-    "csp.middleware.CSPMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -37,6 +29,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+MIDDLEWARE.insert(0, "csp.middleware.CSPMiddleware")
 
 ROOT_URLCONF = "cardetailing.urls"
 
@@ -102,16 +95,9 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # NEW Security Headers
-CONTENT_SECURITY_POLICY = {
-    "DIRECTIVES": {
-        "default-src": ("'self'",),
-        "style-src": ("'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"),
-        "script-src": ("'self'",),
-        "img-src": ("'self'", "https://images.unsplash.com", "data:"),
-        "font-src": ("'self'", "https://cdn.jsdelivr.net"),
-    }
-}
-
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_SCRIPT_SRC = ("'self'",)
 
 SECURE_REFERRER_POLICY = "same-origin"
 
