@@ -28,7 +28,7 @@ class Booking(models.Model):
     preferred_date = models.DateField()
     preferred_time_slot = models.ForeignKey(TimeSlot, on_delete=models.PROTECT)
 
-    notes = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

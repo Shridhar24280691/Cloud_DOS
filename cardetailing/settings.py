@@ -35,6 +35,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+MIDDLEWARE.insert(1, "bookings.middleware.SecurityHeadersMiddleware")
+
 ROOT_URLCONF = "cardetailing.urls"
 
 TEMPLATES = [
