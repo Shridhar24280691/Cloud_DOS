@@ -29,6 +29,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+MIDDLEWARE.insert(0, "csp.middleware.CSPMiddleware")
 
 ROOT_URLCONF = "cardetailing.urls"
 
@@ -84,7 +85,23 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Extra security settings (will be used in production / documented in security report)
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# NEW Security Headers
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_SCRIPT_SRC = ("'self'",)
+
+SECURE_REFERRER_POLICY = "same-origin"
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+PERMISSIONS_POLICY = {
+    "geolocation": "()",
+    "microphone": "()",
+    "camera": "()",
+}
+
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_HTTPONLY = True

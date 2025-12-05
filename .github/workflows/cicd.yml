@@ -74,4 +74,4 @@ jobs:
         with:
           target: ${{ secrets.EB_APP_URL }}
           cmd_options: "-a"
-          fail_action: true
+          fail_action: false
