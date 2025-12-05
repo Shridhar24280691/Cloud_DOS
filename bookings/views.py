@@ -129,6 +129,7 @@ def delete_booking(request, pk):
     """
     booking = get_object_or_404(Booking, pk=pk)
 
+    # Only owner or admin can delete
     if not (request.user.is_staff or booking.user == request.user):
         raise PermissionDenied
 

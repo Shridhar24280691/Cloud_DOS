@@ -9,6 +9,11 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key-change-in-produ
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ["car-detailing-app-env.eba-ecj6emch.us-east-1.elasticbeanstalk.com", "12a82297e2654fe8a75ff5b45ac565ad.vfs.cloud9.us-east-1.amazonaws.com"] 
+CSRF_TRUSTED_ORIGINS = [
+    "https://car-detailing-app-env.eba-ecj6emch.us-east-1.elasticbeanstalk.com",
+    "https://12a82297e2654fe8a75ff5b45ac565ad.vfs.cloud9.us-east-1.amazonaws.com",
+]
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -81,32 +86,11 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-if DEBUG:
-    STATICFILES_DIRS = [BASE_DIR / "static"]
-else:
-    STATICFILES_DIRS = []
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-# NEW Security Headers
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
-CSP_SCRIPT_SRC = ("'self'",)
-
-SECURE_REFERRER_POLICY = "same-origin"
-
-SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
-PERMISSIONS_POLICY = {
-    "geolocation": "()",
-    "microphone": "()",
-    "camera": "()",
-}
 
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
