@@ -1,10 +1,6 @@
 from pathlib import Path
 import os
 import sys
-import pysqlite3
-
-sys.modules['sqlite3'] = pysqlite3
-sys.modules['_sqlite3'] = pysqlite3
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
