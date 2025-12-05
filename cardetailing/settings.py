@@ -34,7 +34,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-MIDDLEWARE.insert(0, "csp.middleware.CSPMiddleware")
 
 ROOT_URLCONF = "cardetailing.urls"
 
