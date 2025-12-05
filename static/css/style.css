@@ -1,11 +1,52 @@
+/* Ensure page fills viewport */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Background full page */
+body {
+    background-image: url("https://images.unsplash.com/photo-1502877338535-766e1452684a");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Slight dark overlay for readability */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: -1;
+}
+
+/* Header & links */
+header h1 {
+    font-size: 1.8rem;
+}
+
+header a {
+    color: #ffd54f;
+    text-decoration: none;
+    margin-left: 12px;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
 /* Centered transparent white block */
 .booking-form-container {
     width: 60%;
     margin: 40px auto;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
     padding: 30px;
     border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
 }
 
 /* Form fields grouped nicely */
@@ -28,23 +69,19 @@ form textarea {
     width: 100%;
     padding: 10px;
     border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.7);
     background: rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(4px);
     color: #000;
     font-weight: 500;
 }
 
-/* Notes small height */
+/* Notes small height, non-resizable */
 textarea {
     height: 40px !important;
     resize: none !important;
 }
 
-/* Background full page */
-body {
-    background-image: url("https://images.unsplash.com/photo-1502877338535-766e1452684a");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+footer p {
+    font-size: 0.9rem;
 }
