@@ -189,8 +189,8 @@ form textarea {
 
 /* Cancel button */
 .btn-booking-cancel {
-    background: rgba(0, 0, 0, 0.05);
-    color: #111827;
+    background: #ffd444;
+    color: #000;
 }
 
 .btn-booking-cancel:hover {
@@ -200,7 +200,7 @@ form textarea {
 /* Save button */
 .btn-booking-save {
     background: #2563eb;
-    color: #ffffff;
+    color: #000;
 }
 
 .btn-booking-save:hover {
