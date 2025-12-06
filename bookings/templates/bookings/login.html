@@ -1,82 +1,32 @@
 {% extends "bookings/base.html" %}
 
 {% block content %}
-<style>
-    .login-card {
-        width: 100%;
-        max-width: 550px;
-        margin: 40px auto;
-        padding: 24px 32px 32px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            "Helvetica Neue", Arial, sans-serif;
-        font-size: 14px;
-    }
+<div class="auth-card login-card">
+    <h2 class="auth-title">Login</h2>
 
-    .login-title {
-        text-align: center;
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 24px;
-    }
-
-    .login-card label {
-        font-weight: 600;
-    }
-
-    .login-card input {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .btn-login {
-        display: block;
-        margin: 16px auto 0;
-        padding: 10px 32px;
-        border-radius: 6px;
-        border: none;
-        background: #2563eb;
-        color: #ffffff;
-        font-weight: 600;
-        cursor: pointer;
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .login-footer-text {
-        text-align: center;
-        margin-top: 20px;
-    }
-</style>
-
-<div class="login-card">
-    <h2 class="login-title">Login</h2>
-
-    <form method="post">
+    <form method="post" autocomplete="off">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
-        {# safely propagate ?next= parameter, escaped to avoid 10031 #}
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next|escape }}">
-        {% endif %}
-
         <div class="mb-3">
-            <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+            <label class="form-label" for="{{ form.username.id_for_label }}">
+                Username
+            </label>
             {{ form.username }}
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="{{ form.password.id_for_label }}">Password</label>
+            <label class="form-label" for="{{ form.password.id_for_label }}">
+                Password
+            </label>
             {{ form.password }}
         </div>
 
-        <button type="submit" class="btn-login">Login</button>
+        <button type="submit" class="btn-auth-primary">
+            Login
+        </button>
 
-        <p class="login-footer-text">
+        <p class="auth-footer-text">
             Don’t have an account?
             <a href="{% url 'signup' %}">Sign Up</a>
         </p>

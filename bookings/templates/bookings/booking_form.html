@@ -1,86 +1,35 @@
 {% extends "bookings/base.html" %}
 
 {% block content %}
-<style>
-    .booking-form-container {
-        width: 100%;
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 24px 32px 32px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            "Helvetica Neue", Arial, sans-serif;
-        font-size: 14px;
-    }
-
-    .booking-form-title {
-        text-align: center;
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 24px;
-    }
-
-    .booking-form-container input,
-    .booking-form-container select,
-    .booking-form-container textarea {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .booking-buttons-row {
-        display: grid;
-        grid-template-columns: 1fr auto auto;
-        align-items: center;
-        column-gap: 12px;
-        margin-top: 24px;
-    }
-
-    .btn-save {
-        padding: 8px 28px;
-        border-radius: 6px;
-        border: none;
-        background: #2563eb;
-        color: #ffffff;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .btn-cancel {
-        padding: 8px 22px;
-        border-radius: 6px;
-        border: none;
-        background: #6b7280;
-        color: #ffffff;
-        font-weight: 500;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
-
 <div class="booking-form-container">
-    <h2 class="booking-form-title">{{ title }}</h2>
+    <h2 class="booking-form-title">{{ title|default:"Booking" }}</h2>
 
     <form method="post" action="{{ post_url }}">
         {% csrf_token %}
-        <div class="form-fields mx-auto" style="max-width: 600px;">
+
+        <div class="form-fields">
+            {{ form.non_field_errors }}
             {% for field in form %}
                 <div class="mb-3">
-                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label class="form-label"
+                           for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                     {% if field.errors %}
-                        <div class="text-danger small">{{ field.errors }}</div>
+                        <div class="text-danger small">
+                            {{ field.errors }}
+                        </div>
                     {% endif %}
                 </div>
             {% endfor %}
         </div>
 
-        <div class="booking-buttons-row">
-            <div></div>
-            <button type="submit" class="btn-save">Save</button>
-            <a href="{% url 'booking_list' %}" class="btn-cancel">Cancel</a>
+        <div class="form-actions">
+            <a href="{% url 'booking_list' %}"
+               class="btn-form btn-form-secondary">Cancel</a>
+            <button type="submit"
+                    class="btn-form btn-form-primary">
+                Save
+            </button>
         </div>
     </form>
 </div>

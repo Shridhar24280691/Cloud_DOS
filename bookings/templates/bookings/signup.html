@@ -1,67 +1,29 @@
 {% extends "bookings/base.html" %}
 
 {% block content %}
-<style>
-    .signup-card {
-        width: 100%;
-        max-width: 550px;
-        margin: 40px auto;
-        padding: 24px 32px 32px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(18px);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-            "Helvetica Neue", Arial, sans-serif;
-        font-size: 14px;
-    }
+<div class="auth-card signup-card">
+    <h2 class="auth-title">Sign Up</h2>
 
-    .signup-title {
-        text-align: center;
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 24px;
-    }
-
-    .signup-card label {
-        font-weight: 600;
-    }
-
-    .signup-card input {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .btn-create-account {
-        display: block;
-        margin: 20px auto 0;
-        padding: 10px 32px;
-        border-radius: 6px;
-        border: none;
-        background: #2563eb;
-        color: #ffffff;
-        font-weight: 600;
-        cursor: pointer;
-    }
-</style>
-
-<div class="signup-card">
-    <h2 class="signup-title">Sign Up</h2>
-
-    <form method="post" action="{% url 'signup_submit' %}">
+    <form method="post">
         {% csrf_token %}
 
-        {% for field in form %}
-            <div class="mb-3">
-                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="text-danger small">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-        {% endfor %}
+        <div class="form-fields">
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
 
-        <button type="submit" class="btn-create-account">
+        <button type="submit" class="btn-auth-primary signup-btn">
             Create Account
         </button>
     </form>

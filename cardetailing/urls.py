@@ -1,5 +1,6 @@
+# cardetailing/urls.py
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.shortcuts import redirect
 from django.views.decorators.http import require_GET
 from django.contrib.auth import views as auth_views
@@ -19,7 +20,6 @@ urlpatterns = [
     path("", root_redirect, name="root_redirect"),
 
     # AUTH
-    # Override Django's login view → use your template bookings/login.html
     path(
         "accounts/login/",
         auth_views.LoginView.as_view(template_name="bookings/login.html"),
@@ -27,12 +27,35 @@ urlpatterns = [
     ),
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
 
-    # Custom signup view from bookings app
+    # SIGNUP (GET + POST)
     path("accounts/signup/", booking_views.signup, name="signup"),
+    path(
+        "accounts/signup/submit/",
+        booking_views.signup_submit,
+        name="signup_submit",          # <-- this was missing
+    ),
 
-    # Booking pages
-    path("bookings/", include("bookings.urls")),
+    # BOOKINGS (GET + POST separated)
+    path("bookings/", booking_views.booking_list, name="booking_list"),
+    path("bookings/create/", booking_views.create_booking, name="create_booking"),
+    path(
+        "bookings/create/submit/",
+        booking_views.create_booking_submit,
+        name="create_booking_submit",
+    ),
+    path("bookings/<int:pk>/edit/", booking_views.edit_booking, name="edit_booking"),
+    path(
+        "bookings/<int:pk>/edit/submit/",
+        booking_views.edit_booking_submit,
+        name="edit_booking_submit",
+    ),
+    path("bookings/<int:pk>/delete/", booking_views.delete_booking, name="delete_booking"),
+    path(
+        "bookings/<int:pk>/delete/confirm/",
+        booking_views.delete_booking_confirm,
+        name="delete_booking_confirm",
+    ),
 
-    # EB Health check
+    # Health-check for EB
     path("health/", booking_views.health, name="health"),
 ]

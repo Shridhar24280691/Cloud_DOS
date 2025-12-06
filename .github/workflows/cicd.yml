@@ -83,4 +83,5 @@ jobs:
           target: ${{ secrets.EB_APP_URL }}
           cmd_options: "-a"
           fail_action: false
+          artifact_name: "zap-scan"
           allow_issue_writing: false

@@ -10,10 +10,24 @@ from django.urls import reverse
 from .models import Booking
 from .forms import BookingForm
 
-
-# ===== Template path constants (to avoid duplication) =====
+# ===== Template path constants =====
 BOOKING_FORM_TEMPLATE = "bookings/booking_form.html"
-SIGNUP_TEMPLATE = "bookings/signup.html"  # optional, but nice to have
+SIGNUP_TEMPLATE = "bookings/signup.html"
+
+
+def _render_booking_form(request, form, title, post_url):
+    """
+    Internal helper to render the booking form.
+
+    Keeping this in one place avoids duplication and keeps
+    SonarQube happy about repeated code blocks.
+    """
+    context = {
+        "form": form,
+        "title": title,
+        "post_url": post_url,
+    }
+    return render(request, BOOKING_FORM_TEMPLATE, context)
 
 
 @require_GET
@@ -22,7 +36,7 @@ def health(request):
     return JsonResponse({"status": "ok"})
 
 
-# ---------- AUTH VIEWS (SIGNUP ONLY, LOGIN IS BUILT-IN) ----------
+# ---------- AUTH VIEWS ----------
 
 @require_GET
 def signup(request):
@@ -77,7 +91,6 @@ def create_booking(request):
     """
     GET -> show booking creation form.
     """
-    # Optionally pre-fill name/email from user
     initial = {}
     if request.user.get_full_name():
         initial["customer_name"] = request.user.get_full_name()
@@ -91,11 +104,11 @@ def create_booking(request):
 
     return render(
         request,
-        BOOKING_FORM_TEMPLATE,
+        "bookings/booking_form.html",
         {
             "form": form,
             "title": "Create Booking",
-            "post_url": reverse("create_booking_submit"),
+            "post_url": reverse("create_booking_submit"),  # IMPORTANT
         },
     )
 
@@ -105,23 +118,21 @@ def create_booking(request):
 def create_booking_submit(request):
     """
     POST -> create a new booking for the logged-in user.
+    (No side effects on GET, which is what SonarQube expects.)
     """
     form = BookingForm(request.POST)
     if form.is_valid():
         booking = form.save(commit=False)
-        booking.user = request.user  # link to current user
+        booking.user = request.user
         booking.save()
         return redirect("booking_list")
 
     # Invalid form -> show again
-    return render(
+    return _render_booking_form(
         request,
-        BOOKING_FORM_TEMPLATE,
-        {
-            "form": form,
-            "title": "Create Booking",
-            "post_url": reverse("create_booking_submit"),
-        },
+        form=form,
+        title="Create Booking",
+        post_url=reverse("create_booking_submit"),
     )
 
 
@@ -138,14 +149,11 @@ def edit_booking(request, pk):
 
     form = BookingForm(instance=booking)
 
-    return render(
+    return _render_booking_form(
         request,
-        BOOKING_FORM_TEMPLATE,
-        {
-            "form": form,
-            "title": "Edit Booking",
-            "post_url": reverse("edit_booking_submit", args=[booking.pk]),
-        },
+        form=form,
+        title="Edit Booking",
+        post_url=reverse("edit_booking_submit", args=[booking.pk]),
     )
 
 
@@ -165,14 +173,11 @@ def edit_booking_submit(request, pk):
         form.save()
         return redirect("booking_list")
 
-    return render(
+    return _render_booking_form(
         request,
-        BOOKING_FORM_TEMPLATE,
-        {
-            "form": form,
-            "title": "Edit Booking",
-            "post_url": reverse("edit_booking_submit", args=[booking.pk]),
-        },
+        form=form,
+        title="Edit Booking",
+        post_url=reverse("edit_booking_submit", args=[booking.pk]),
     )
 
 

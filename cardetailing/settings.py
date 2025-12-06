@@ -100,5 +100,5 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/bookings/booking_list/"
+LOGIN_REDIRECT_URL = "/bookings/"
 LOGOUT_REDIRECT_URL =  "/accounts/login/"

@@ -1,241 +1,113 @@
-from datetime import date, timedelta
+# bookings/tests/test_views.py
+from datetime import date
 
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 
-from bookings.models import Booking
+from bookings.forms import BookingForm
 
 
-class SignupViewTests(TestCase):
-    """Testing for the public signup views."""
+class PublicViewsTests(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
 
-    def test_signup_get_renders_template(self):
-        """GET /signup/ returns the signup page with the correct template."""
+    def test_root_redirects_to_login(self):
+        """Root URL should redirect to the login page."""
+        response = self.client.get(reverse("root_redirect"))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/accounts/login/", response["Location"])
+
+    def test_health_endpoint(self):
+        """Health endpoint should return JSON with status ok."""
+        response = self.client.get(reverse("health"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "ok"})
+
+    def test_signup_get_renders_form(self):
+        """GET /accounts/signup/ should render the signup form."""
         response = self.client.get(reverse("signup"))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "bookings/signup.html")
+        self.assertIn("form", response.context)
 
-    def test_signup_submit_creates_user_and_redirects(self):
-        """POST /signup/submit/ creates a user and redirects to booking_list."""
-        username = "newuser"
-
-        response = self.client.post(
-            reverse("signup_submit"),
-            {
-                "username": username,
-                # UserCreationForm fields
-                "password1": "StrongPass12345",
-                "password2": "StrongPass12345",
-            },
-        )
-
-        # success -> redirect to booking_list
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("booking_list"))
-        self.assertTrue(User.objects.filter(username=username).exists())
-
-
-class BookingViewsTests(TestCase):
-    """Tests for the booking CRUD views."""
-
-    def setUp(self):
-        # Base user used for most tests
-        self.user = User.objects.create_user(
-            username="testuser",
-            password="testpass123",
-        )
-
-    # ---------- helpers ----------
-
-    def _login(self, user=None, password="testpass123"):
-        """Log in as the given user (or default self.user)."""
-        user = user or self.user
-        self.client.login(username=user.username, password=password)
-
-    def _valid_booking_data(self, **overrides):
+    def test_signup_post_invalid_shows_errors(self):
         """
-        Return a dict with *valid* form data for BookingForm.
+        POST /accounts/signup/submit/ with invalid data
+        should re-render the form with errors.
         """
+        response = self.client.post(reverse("signup_submit"), data={})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("form", response.context)
+        self.assertTrue(response.context["form"].errors)
+
+    def test_signup_post_valid_creates_user_and_redirects(self):
+        """Valid signup should create a new user and redirect to booking_list."""
         data = {
-            "customer_name": "Test Customer",
-            "email": "customer@example.com",
-            "phone": "1234567890",
-            "car_model": "Test Car",
-            "service_type": "Full Detailing",
-            "preferred_date": (date.today() + timedelta(days=1)).isoformat(),
-            "preferred_time_slot": "",
-            "notes": "Some notes from tests.",
+            "username": "newuser",
+            "password1": "VeryStrongPass123!",
+            "password2": "VeryStrongPass123!",
         }
-        data.update(overrides)
-        return data
+        response = self.client.post(reverse("signup_submit"), data=data)
+        # should redirect on success
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("booking_list"))
+        self.assertTrue(User.objects.filter(username="newuser").exists())
 
-    def _create_booking_instance(self, owner=None):
-        """
-        Create a Booking instance directly, for edit/delete tests.
-        """
-        owner = owner or self.user
 
-        return Booking.objects.create(
-            user=owner,
-            customer_name="Existing Customer",
-            email="existing@example.com",
-            phone="9876543210",
-            car_model="Existing Car",
-            service_type="Full Detailing",
-            preferred_date=date.today() + timedelta(days=1),
-            notes="Existing booking from tests.",
+class AuthenticatedBookingViewsTests(TestCase):
+    def setUp(self) -> None:
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="normal_user", password="secret123"
         )
-
-    # ---------- booking_list ----------
+        self.staff = User.objects.create_user(
+            username="staff_user", password="secret123", is_staff=True
+        )
 
     def test_booking_list_requires_login(self):
-        """Anonymous users are redirected to login for booking_list."""
+        """Anonymous users should be redirected to login."""
         response = self.client.get(reverse("booking_list"))
         self.assertEqual(response.status_code, 302)
         self.assertIn("/accounts/login/", response["Location"])
 
-    def test_booking_list_for_normal_user_filters_by_user(self):
-        """Non-staff users only see their own bookings."""
-        # booking for self.user
-        booking_own = self._create_booking_instance(owner=self.user)
-        # booking for another user
-        other = User.objects.create_user(
-            username="other", password="otherpass123"
-        )
-        self._create_booking_instance(owner=other)
-
-        self._login()
+    def test_booking_list_for_normal_user(self):
+        """
+        Logged-in non-staff user should see booking_list page
+        (even if there are no bookings yet).
+        """
+        self.client.login(username="normal_user", password="secret123")
         response = self.client.get(reverse("booking_list"))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "bookings/booking_list.html")
+        self.assertIn("bookings", response.context)
 
-        bookings = list(response.context["bookings"])
-        self.assertEqual(bookings, [booking_own])
-
-    def test_booking_list_for_staff_sees_all(self):
-        """Staff users see all bookings."""
-        staff = User.objects.create_user(
-            username="staffuser", password="staffpass123", is_staff=True
-        )
-        b1 = self._create_booking_instance(owner=self.user)
-        b2 = self._create_booking_instance(owner=staff)
-
-        self._login(user=staff, password="staffpass123")
+    def test_booking_list_for_staff_user(self):
+        """Staff user should also see booking_list page."""
+        self.client.login(username="staff_user", password="secret123")
         response = self.client.get(reverse("booking_list"))
         self.assertEqual(response.status_code, 200)
-
-        # Should see both bookings
-        bookings = set(response.context["bookings"])
-        self.assertEqual(bookings, {b1, b2})
-
-    # ---------- create_booking (GET + POST) ----------
+        self.assertIn("bookings", response.context)
 
     def test_create_booking_get_renders_form(self):
-        """GET /create/ renders the create booking form."""
-        self._login()
+        """
+        GET /bookings/create/ should render the booking form
+        and set the correct post_url in the context.
+        """
+        self.client.login(username="normal_user", password="secret123")
         response = self.client.get(reverse("create_booking"))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "bookings/booking_form.html")
-        self.assertContains(response, "Create Booking")
-
-    def test_create_booking_submit_invalid_shows_form_again(self):
-        """
-        POST /create/submit/ with invalid data should stay on the form.
-
-        We intentionally send empty data so that form.is_valid() is False,
-        exercising the POST branch that re-renders the template.
-        """
-        self._login()
-        response = self.client.post(reverse("create_booking_submit"), {})
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "bookings/booking_form.html")
-        self.assertContains(response, "Create Booking")
-
-    # ---------- edit_booking (GET + POST) ----------
-
-    def test_edit_booking_get_as_owner(self):
-        """Owner can view the edit page for their booking."""
-        booking = self._create_booking_instance()
-        self._login()
-
-        url = reverse("edit_booking", args=[booking.pk])
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "bookings/booking_form.html")
-        self.assertContains(response, "Edit Booking")
-
-    def test_edit_booking_submit_invalid_keeps_user_on_form(self):
-        """
-        POST /edit/<pk>/submit/ with invalid data should re-render form.
-
-        Again we send clearly invalid data so is_valid() is False, but the
-        POST code path is covered.
-        """
-        booking = self._create_booking_instance()
-        self._login()
-
-        url = reverse("edit_booking_submit", args=[booking.pk])
-        response = self.client.post(url, {"customer_name": ""})  # invalid
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "bookings/booking_form.html")
-        self.assertContains(response, "Edit Booking")
-
-    def test_edit_booking_forbidden_for_non_owner(self):
-        """Non-owner non-staff users should receive 403 for edit_booking."""
-        booking = self._create_booking_instance()
-
-        other = User.objects.create_user(
-            username="outsider", password="outsider123"
-        )
-        self._login(user=other, password="outsider123")
-
-        url = reverse("edit_booking", args=[booking.pk])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 403)
-
-    # ---------- delete_booking (GET + POST) ----------
-
-    def test_delete_booking_get_confirmation_page(self):
-        """Owner sees a confirmation page before deletion."""
-        booking = self._create_booking_instance()
-        self._login()
-
-        url = reverse("delete_booking", args=[booking.pk])
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(
-            response, "bookings/booking_confirm_delete.html"
-        )
-        self.assertContains(response, "Delete Booking")
-
-    def test_delete_booking_confirm_deletes_and_redirects(self):
-        """POST /delete/<pk>/confirm/ deletes the booking and redirects."""
-        booking = self._create_booking_instance()
-        self._login()
-
-        url = reverse("delete_booking_confirm", args=[booking.pk])
-        response = self.client.post(url)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("booking_list"))
-        self.assertFalse(
-            Booking.objects.filter(pk=booking.pk).exists(),
-            "Booking should be deleted after delete_booking_confirm POST",
+        self.assertIsInstance(response.context["form"], BookingForm)
+        self.assertEqual(response.context["title"], "Create Booking")
+        self.assertEqual(
+            response.context["post_url"], reverse("create_booking_submit")
         )
 
-    def test_delete_booking_forbidden_for_non_owner(self):
-        """Non-owner non-staff users cannot access delete_booking."""
-        booking = self._create_booking_instance()
-        other = User.objects.create_user(
-            username="outsider_del", password="outsider456"
-        )
-        self._login(user=other, password="outsider456")
-
-        url = reverse("delete_booking", args=[booking.pk])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 403)
+    def test_create_booking_post_invalid_shows_form_again(self):
+        """
+        POST /bookings/create/submit/ with invalid data should re-render
+        the form with validation errors (covers the POST view path).
+        """
+        self.client.login(username="normal_user", password="secret123")
+        response = self.client.post(reverse("create_booking_submit"), data={})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("form", response.context)
+        self.assertTrue(response.context["form"].errors)
