@@ -5,31 +5,28 @@ class SecurityHeadersMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
 
-        # XSS Protection
-        response["X-XSS-Protection"] = "1; mode=block"
-
-        # Prevent MIME sniffing
-        response["X-Content-Type-Options"] = "nosniff"
-
-        # Prevent clickjacking
-        response["X-Frame-Options"] = "DENY"
+        # Basic CSP 
+        csp = (
+            "default-src 'self'; "
+            "script-src 'self' https://cdn.jsdelivr.net; "
+            "style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; "
+            "img-src 'self' data: https://images.unsplash.com; "
+            "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; "
+            "connect-src 'self'; "
+            "frame-ancestors 'none'; "
+            "form-action 'self'; "
+            "base-uri 'self'"
+        )
+        response["Content-Security-Policy"] = csp
 
         # Permissions Policy
         response["Permissions-Policy"] = (
-            "camera=(), microphone=(), geolocation=()"
+            "geolocation=(), microphone=(), camera=(), fullscreen=(), payment=()"
         )
 
-        # Cross-Origin opener & resource isolation — fixes Spectre warnings
-        response["Cross-Origin-Opener-Policy"] = "same-origin"
-        response["Cross-Origin-Resource-Policy"] = "same-origin"
-        response["Cross-Origin-Embedder-Policy"] = "require-corp"
-
-        # OPTIONAL CSP to prevent 10038/10055
-        response["Content-Security-Policy"] = (
-            "default-src 'self'; "
-            "img-src 'self' https://images.unsplash.com data:; "
-            "style-src 'self' 'unsafe-inline'; "
-            "script-src 'self'; "
-        )
+        # Other helpful headers
+        response["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response["X-Content-Type-Options"] = "nosniff"
+        response["X-Frame-Options"] = "DENY"
 
         return response

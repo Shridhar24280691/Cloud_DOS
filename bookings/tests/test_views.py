@@ -8,7 +8,7 @@ from bookings.models import Booking
 
 
 class SignupViewTests(TestCase):
-    """Tests for the public signup views."""
+    """Testing for the public signup views."""
 
     def test_signup_get_renders_template(self):
         """GET /signup/ returns the signup page with the correct template."""
@@ -43,7 +43,7 @@ class BookingViewsTests(TestCase):
         # Base user used for most tests
         self.user = User.objects.create_user(
             username="testuser",
-            password="testpass123",  # test-only credential
+            password="testpass123",
         )
 
     # ---------- helpers ----------
@@ -56,19 +56,12 @@ class BookingViewsTests(TestCase):
     def _valid_booking_data(self, **overrides):
         """
         Return a dict with *valid* form data for BookingForm.
-
-        ⚠️ IMPORTANT:
-        - If your Booking.service_type choices are different, update
-          the 'service_type' value to one of your valid keys or labels.
-        - If preferred_time_slot is required and cannot be null, you will
-          need to create a real time slot object and pass its PK here.
         """
         data = {
             "customer_name": "Test Customer",
             "email": "customer@example.com",
             "phone": "1234567890",
             "car_model": "Test Car",
-            # TODO: adjust if your choices differ
             "service_type": "Full Detailing",
             "preferred_date": (date.today() + timedelta(days=1)).isoformat(),
             "preferred_time_slot": "",
@@ -80,10 +73,6 @@ class BookingViewsTests(TestCase):
     def _create_booking_instance(self, owner=None):
         """
         Create a Booking instance directly, for edit/delete tests.
-
-        ⚠️ If your Booking model has non-null constraints (for example,
-        preferred_time_slot cannot be null), adapt this to create any
-        related objects needed and pass them here.
         """
         owner = owner or self.user
 
@@ -93,11 +82,9 @@ class BookingViewsTests(TestCase):
             email="existing@example.com",
             phone="9876543210",
             car_model="Existing Car",
-            # keep consistent with _valid_booking_data
             service_type="Full Detailing",
             preferred_date=date.today() + timedelta(days=1),
             notes="Existing booking from tests.",
-            # preferred_time_slot can be left as default/null if your model allows it.
         )
 
     # ---------- booking_list ----------
