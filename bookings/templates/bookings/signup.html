@@ -1,31 +1,29 @@
 {% extends "bookings/base.html" %}
 
 {% block content %}
-<div class="auth-card signup-card">
+<div class="auth-card">
     <h2 class="auth-title">Sign Up</h2>
 
-    <form method="post">
+    <form method="post" autocomplete="off" action="{% url 'signup_submit' %}">
         {% csrf_token %}
+        {{ form.non_field_errors }}
 
-        <div class="form-fields">
-            {% for field in form %}
-                <div class="mb-3">
-                    <label class="form-label" for="{{ field.id_for_label }}">
-                        {{ field.label }}
-                    </label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="text-danger small">
-                            {{ field.errors }}
-                        </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
         </div>
 
-        <button type="submit" class="btn-auth-primary signup-btn">
-            Create Account
-        </button>
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.password2.id_for_label }}">Password confirmation</label>
+            {{ form.password2 }}
+        </div>
+
+        <button type="submit" class="btn-auth-primary">Create Account</button>
     </form>
 </div>
 {% endblock %}

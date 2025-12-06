@@ -10,26 +10,31 @@ from bookings import views as booking_views
 
 @require_GET
 def root_redirect(request):
-    """Redirect root URL to the login page."""
+    """Redirect root URL to login page."""
     return redirect("login")
 
 
 urlpatterns = [
-    # Admin
     path("admin/", admin.site.urls),
 
-    # Root → login
+    # Root -> login
     path("", root_redirect, name="root_redirect"),
 
-    # ========= AUTH =========
+    # ---------- AUTH ----------
     path(
         "accounts/login/",
-        auth_views.LoginView.as_view(template_name="bookings/login.html"),
+        auth_views.LoginView.as_view(
+            template_name="bookings/login.html"  # <- always use this template
+        ),
         name="login",
     ),
-    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path(
+        "accounts/logout/",
+        auth_views.LogoutView.as_view(next_page="login"),
+        name="logout",
+    ),
 
-    # Signup (GET + POST separated for Sonar)
+    # Signup split into GET + POST
     path("accounts/signup/", booking_views.signup, name="signup"),
     path(
         "accounts/signup/submit/",
@@ -37,11 +42,9 @@ urlpatterns = [
         name="signup_submit",
     ),
 
-    # ========= BOOKINGS =========
-    # List
+    # ---------- BOOKINGS ----------
     path("bookings/", booking_views.booking_list, name="booking_list"),
 
-    # Create
     path("bookings/create/", booking_views.create_booking, name="create_booking"),
     path(
         "bookings/create/submit/",
@@ -49,7 +52,6 @@ urlpatterns = [
         name="create_booking_submit",
     ),
 
-    # Edit
     path("bookings/<int:pk>/edit/", booking_views.edit_booking, name="edit_booking"),
     path(
         "bookings/<int:pk>/edit/submit/",
@@ -57,7 +59,6 @@ urlpatterns = [
         name="edit_booking_submit",
     ),
 
-    # Delete
     path("bookings/<int:pk>/delete/", booking_views.delete_booking, name="delete_booking"),
     path(
         "bookings/<int:pk>/delete/confirm/",
@@ -65,6 +66,6 @@ urlpatterns = [
         name="delete_booking_confirm",
     ),
 
-    # ========= HEALTH CHECK (EB) =========
+    # Health-check for EB
     path("health/", booking_views.health, name="health"),
 ]

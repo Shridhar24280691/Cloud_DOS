@@ -24,13 +24,14 @@
         </div>
 
         <div class="form-actions">
-            <a href="{% url 'booking_list' %}"
-               class="btn-form btn-form-secondary">Cancel</a>
-            <button type="submit"
-                    class="btn-form btn-form-primary">
+            <a href="{% url 'booking_list' %}" class="btn-booking btn-booking-cancel">
+                Cancel
+            </a>
+            <button type="submit" class="btn-booking btn-booking-save">
                 Save
             </button>
         </div>
+
     </form>
 </div>
 {% endblock %}

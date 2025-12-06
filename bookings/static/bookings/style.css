@@ -103,26 +103,108 @@ form textarea {
     -webkit-backdrop-filter: blur(4px);
     color: #000;
     font-weight: 500;
+    box-sizing: border-box;
 }
 
-/* Notes small height in list, normal in forms */
-textarea {
+/* NOTES in form – smaller height (similar to other fields) */
+.booking-form-container textarea,
+.booking-form-container .booking-notes-field {
+    min-height: 52px;
+    max-height: 90px;
     resize: vertical;
 }
 
-/* Booking table */
+/* ==== BOOKING LIST TABLE ==== */
+
 .booking-list-container table {
     margin-bottom: 0;
     width: 100%;
+    border-collapse: collapse;
 }
 
+/* header row */
 .booking-list-container thead tr {
-    background: #000;
-    color: #fff;
+    background: #000000;
+    color: #ffffff;
+}
+
+.booking-list-container th,
+.booking-list-container td {
+    padding: 9px 15px;           /* tighter row spacing */
+    font-size: 15px;
+}
+
+/* body rows – more transparent white */
+.booking-list-container tbody tr {
+    background: rgba(255, 255, 255, 0.28);
 }
 
 .booking-list-container tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.34);
+}
+
+.booking-list-container tbody tr:hover {
+    background: rgba(255, 255, 255, 0.46);
+}
+
+/* Actions column links (Edit / Delete) */
+.booking-list-container td a {
+    font-weight: 500;
+    text-decoration: none;
+    margin-right: 8px;
+    font-size: 15px;
+}
+
+.booking-list-container td a:first-of-type {
+    color: #2563eb;   /* Edit */
+}
+
+.booking-list-container td a:last-of-type {
+    color: #b91c1c;   /* Delete */
+}
+
+.booking-list-container td a:hover {
+    text-decoration: underline;
+}
+
+/* ==== BOOKING FORM – BUTTON ROW ==== */
+
+/* Wrap Cancel + Save inside a .form-actions div in the template */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+/* generic button styles */
+.btn-booking {
+    padding: 8px 22px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Cancel button */
+.btn-booking-cancel {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111827;
+}
+
+.btn-booking-cancel:hover {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+/* Save button */
+.btn-booking-save {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.btn-booking-save:hover {
+    filter: brightness(0.95);
 }
 
 /* ==== AUTH CARDS (LOGIN & SIGNUP) ==== */

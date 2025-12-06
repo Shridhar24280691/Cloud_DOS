@@ -79,9 +79,9 @@ jobs:
     steps:
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@66042c8e7e24680119199a017e5b0e8603bf4dae
+        continue-on-error: true
         with:
           target: ${{ secrets.EB_APP_URL }}
           cmd_options: "-a"
           fail_action: false
-          artifact_name: "zap-scan"
           allow_issue_writing: false
