@@ -11,6 +11,11 @@ from .models import Booking
 from .forms import BookingForm
 
 
+# ===== Template path constants (to avoid duplication) =====
+BOOKING_FORM_TEMPLATE = "bookings/booking_form.html"
+SIGNUP_TEMPLATE = "bookings/signup.html"  # optional, but nice to have
+
+
 @require_GET
 def health(request):
     """Simple health-check endpoint used by Elastic Beanstalk."""
@@ -26,7 +31,7 @@ def signup(request):
     Returns a blank signup form.
     """
     form = UserCreationForm()
-    return render(request, "bookings/signup.html", {"form": form})
+    return render(request, SIGNUP_TEMPLATE, {"form": form})
 
 
 @require_POST
@@ -42,7 +47,7 @@ def signup_submit(request):
         return redirect("booking_list")
 
     # invalid -> show form again with errors
-    return render(request, "bookings/signup.html", {"form": form})
+    return render(request, SIGNUP_TEMPLATE, {"form": form})
 
 
 # ---------- BOOKING VIEWS ----------
@@ -86,7 +91,7 @@ def create_booking(request):
 
     return render(
         request,
-        "bookings/booking_form.html",
+        BOOKING_FORM_TEMPLATE,
         {
             "form": form,
             "title": "Create Booking",
@@ -111,7 +116,7 @@ def create_booking_submit(request):
     # Invalid form -> show again
     return render(
         request,
-        "bookings/booking_form.html",
+        BOOKING_FORM_TEMPLATE,
         {
             "form": form,
             "title": "Create Booking",
@@ -135,7 +140,7 @@ def edit_booking(request, pk):
 
     return render(
         request,
-        "bookings/booking_form.html",
+        BOOKING_FORM_TEMPLATE,
         {
             "form": form,
             "title": "Edit Booking",
@@ -162,7 +167,7 @@ def edit_booking_submit(request, pk):
 
     return render(
         request,
-        "bookings/booking_form.html",
+        BOOKING_FORM_TEMPLATE,
         {
             "form": form,
             "title": "Edit Booking",
