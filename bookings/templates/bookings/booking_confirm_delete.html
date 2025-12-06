@@ -5,12 +5,15 @@
 
     <h2 class="mb-3">Delete Booking</h2>
 
-    <p>Are you sure you want to delete the booking for <strong>{{ booking.customer_name }}</strong>?</p>
+    <p>Are you sure you want to delete the booking for
+        <strong>{{ booking.customer_name }}</strong>?</p>
 
-    <form method="post">
+    <form method="post" class="mt-3">
         {% csrf_token %}
-        <button class="btn btn-danger px-4">Delete</button>
-        <a href="{% url 'booking_list' %}" class="btn btn-secondary px-4">Cancel</a>
+        <div class="d-flex justify-content-center gap-3">
+            <button class="btn btn-danger px-4">Delete</button>
+            <a href="{% url 'booking_list' %}" class="btn btn-secondary px-4">Cancel</a>
+        </div>
     </form>
 </div>
 {% endblock %}

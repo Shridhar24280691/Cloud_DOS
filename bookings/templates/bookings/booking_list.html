@@ -1,19 +1,62 @@
 {% extends "bookings/base.html" %}
 
 {% block content %}
-<div class="booking-list-container shadow-lg p-4 rounded">
 
-    <h2 class="text-center mb-4">Bookings</h2>
-    <div class="text-center mb-3">
-        <a class="btn btn-primary px-4" href="{% url 'create_booking' %}">
-            Create New Booking
-        </a>
-    </div>
-    <div class="text-end mb-3">
-        <a href="{% url 'logout' %}" class="btn btn-warning">Logout</a>
-    </div>
-    <table class="table table-striped table-bordered table-hover text-center bg-white rounded shadow-sm">
-        <thead class="table-dark">
+<style>
+    /* Override base sizes for this page */
+
+    .booking-list-container {
+        width: 100%;
+        max-width: 1100px;           /* a little bigger */
+        margin: 40px auto 40px;      /* centered horizontally */
+        padding: 28px 36px 32px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .booking-list-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0 0 24px 0;
+    }
+
+    .booking-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .booking-table th,
+    .booking-table td {
+        padding: 10px 12px;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+    }
+
+    .booking-table th {
+        background: rgba(0, 0, 0, 0.85);
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .booking-table tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.45);
+    }
+
+    .booking-table tr:nth-child(odd) {
+        background: rgba(255, 255, 255, 0.25);
+    }
+</style>
+
+<div class="booking-list-container">
+
+    <h2 class="booking-list-title">Bookings</h2>
+
+    <table class="booking-table">
+        <thead>
             <tr>
                 <th>Customer</th>
                 <th>Car Model</th>
@@ -31,17 +74,24 @@
                 <td>{{ booking.car_model }}</td>
                 <td>{{ booking.get_service_type_display }}</td>
                 <td>{{ booking.preferred_date }}</td>
-                <td>{{ booking.preferred_time_slot.start_time }} - {{ booking.preferred_time_slot.end_time }}</td>
+                <td>
+                    {{ booking.preferred_time_slot.start_time }}
+                    -
+                    {{ booking.preferred_time_slot.end_time }}
+                </td>
                 <td>{{ booking.notes }}</td>
                 <td>
-                    <a href="{% url 'edit_booking' booking.pk %}" class="link-primary">Edit</a> |
-                    <a href="{% url 'delete_booking' booking.pk %}" class="link-danger">Delete</a>
+                    <a href="{% url 'edit_booking' booking.pk %}">Edit</a> |
+                    <a href="{% url 'delete_booking' booking.pk %}">Delete</a>
                 </td>
             </tr>
         {% empty %}
-            <tr><td colspan="7">No bookings found.</td></tr>
+            <tr>
+                <td colspan="7">No bookings found.</td>
+            </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+
 {% endblock %}

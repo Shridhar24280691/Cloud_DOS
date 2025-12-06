@@ -1,11 +1,40 @@
-/* Centered transparent white block */
+/* Full-page background */
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-image: url("https://images.unsplash.com/photo-1502877338535-766e1452684a");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Slight gradient overlay to improve contrast */
+.main-header,
+.footer-text {
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+}
+
+/* Glassmorphism card used by forms */
 .booking-form-container {
     width: 60%;
-    margin: 40px auto;
+    margin: 80px auto;
     background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     padding: 30px;
     border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Booking list card */
+.booking-list-container {
+    width: 80%;
+    margin: 120px auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Form fields grouped nicely */
@@ -28,9 +57,10 @@ form textarea {
     width: 100%;
     padding: 10px;
     border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     background: rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     color: #000;
     font-weight: 500;
 }
@@ -41,10 +71,18 @@ textarea {
     resize: none !important;
 }
 
-/* Background full page */
-body {
-    background-image: url("https://images.unsplash.com/photo-1502877338535-766e1452684a");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+/* Table tweaks so it looks good over background */
+.booking-list-container table {
+    margin-bottom: 0;
+}
+
+/* Links in header */
+header nav a {
+    color: #ffd966;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+header nav a:hover {
+    text-decoration: underline;
 }
