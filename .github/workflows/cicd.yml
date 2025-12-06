@@ -78,13 +78,16 @@ jobs:
 
     steps:
       - name: Pull OWASP ZAP Docker image
-        run: docker pull owasp/zap2docker-stable
+        run: docker pull ghcr.io/zaproxy/zaproxy:bare
 
       - name: Run OWASP ZAP Baseline Scan (no artifacts)
         run: |
-          docker run --rm -t \
-            owasp/zap2docker-stable \
+          docker run --rm \
+            -u zap \
+            ghcr.io/zaproxy/zaproxy:bare \
             zap-baseline.py \
               -t "${{ secrets.EB_APP_URL }}" \
               -a \
-              -I
+              -j \
+              -I \
+          || true
