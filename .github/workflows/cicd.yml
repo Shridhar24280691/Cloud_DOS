@@ -72,7 +72,7 @@ jobs:
           existing_bucket_name: ${{ secrets.EB_S3_BUCKET }}
           wait_for_deployment: true
 
-   zap-scan:
+  zap-scan:
     runs-on: ubuntu-latest
     needs: build-and-deploy
 
