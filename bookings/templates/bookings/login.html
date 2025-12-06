@@ -9,22 +9,16 @@
         {{ form.non_field_errors }}
 
         <div class="mb-3">
-            <label class="form-label" for="{{ form.username.id_for_label }}">
-                Username
-            </label>
+            <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
             {{ form.username }}
         </div>
 
         <div class="mb-3">
-            <label class="form-label" for="{{ form.password.id_for_label }}">
-                Password
-            </label>
+            <label class="form-label" for="{{ form.password.id_for_label }}">Password</label>
             {{ form.password }}
         </div>
 
-        <button type="submit" class="btn-auth-primary">
-            Login
-        </button>
+        <button type="submit" class="btn-auth-primary btn-login">Login</button>
 
         <p class="auth-footer-text">
             Don’t have an account?

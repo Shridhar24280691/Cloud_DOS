@@ -1,5 +1,6 @@
 /* ==== GLOBAL LAYOUT / BACKGROUND ==== */
 
+/* Full-page background */
 body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -9,6 +10,7 @@ body {
     background-attachment: fixed;
 }
 
+/* Slight gradient overlay to improve contrast on header + footer */
 .main-header,
 .footer-text {
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
@@ -60,7 +62,7 @@ body {
 .booking-list-container {
     width: 100%;
     max-width: 1100px;
-    margin: 10px auto 40px;
+    margin: 20px auto 40px;
     background: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
@@ -69,32 +71,29 @@ body {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* titles */
-.booking-form-title,
-.booking-list-title {
+/* Center section titles */
+.booking-form-container h2,
+.booking-list-container h2 {
     text-align: center;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 24px;
+    margin-bottom: 1.5rem;
 }
 
-/* fields inside booking form */
+/* Form fields grouped nicely */
 .form-fields {
-    max-width: 550px;
+    max-width: 600px;
     margin: 0 auto;
 }
 
-/* labels on all forms */
+/* Labels readable */
 .form-label {
     font-weight: 600;
-    color: #ffffff;
-    text-shadow: 0 0 3px #000;
+    color: #222;
 }
 
-/* generic inputs (booking pages) */
-.booking-form-container input,
-.booking-form-container select,
-.booking-form-container textarea {
+/* Transparent fields for all forms */
+form input,
+form select,
+form textarea {
     width: 100%;
     padding: 10px;
     border-radius: 6px;
@@ -106,113 +105,32 @@ body {
     font-weight: 500;
 }
 
-/* notes box height */
-.booking-form-container textarea {
-    height: 48px !important;
-    resize: none !important;
+/* Notes small height in list, normal in forms */
+textarea {
+    resize: vertical;
 }
 
-/* form actions: Save / Cancel */
-.form-actions {
-    margin-top: 24px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.btn-form {
-    padding: 8px 22px;
-    border-radius: 999px;
-    border: none;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn-form-primary,
-.btn-form-secondary {
-    background: #2563eb;
-    color: #ffffff;
-}
-
-.btn-form-primary:hover,
-.btn-form-secondary:hover {
-    background: #1d4ed8;
-}
-
-/* ==== BOOKING LIST TABLE ==== */
-
-.booking-table {
+/* Booking table */
+.booking-list-container table {
+    margin-bottom: 0;
     width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;
-    overflow: hidden;
-    font-size: 14px;
 }
 
-/* header row: black, white text */
-.booking-table thead th {
-    background: rgba(0, 0, 0, 0.92);
-    color: #ffffff;
-    padding: 10px 16px;
-    text-align: left;
+.booking-list-container thead tr {
+    background: #000;
+    color: #fff;
 }
 
-/* body rows: semi-transparent */
-.booking-table tbody td {
-    background: rgba(255, 255, 255, 0.16);
-    padding: 10px 16px;
-}
-
-/* light separators between rows */
-.booking-table tbody tr + tr td {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-/* notes column: wider with more space */
-.booking-table tbody td:nth-child(6),
-.booking-table thead th:nth-child(6) {
-    min-width: 220px;
-}
-
-.notes-cell {
-    letter-spacing: 0.01em;
-}
-
-/* actions column */
-.actions-cell {
-    white-space: nowrap;
-    text-align: center;
-}
-
-/* Edit / Delete links */
-.action-link {
-    font-weight: 600;
-    font-size: 13px;
-    margin: 0 4px;
-    text-decoration: none;
-}
-
-.action-edit {
-    color: #2563eb;
-}
-
-.action-delete {
-    color: #dc2626;
-}
-
-.action-link:hover {
-    text-decoration: underline;
+.booking-list-container tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.45);
 }
 
 /* ==== AUTH CARDS (LOGIN & SIGNUP) ==== */
 
 .auth-card {
     width: 100%;
-    max-width: 700px;
-    margin: 10px auto 40px;
+    max-width: 650px;
+    margin: 40px auto;
     padding: 24px 32px 32px;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.2);
@@ -229,56 +147,39 @@ body {
     margin-bottom: 24px;
 }
 
-/* make auth inputs crisp, not blurry */
+.auth-card label {
+    font-weight: 600;
+    color: #222222;
+}
+
 .auth-card input {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    background: #ffffff;
-    color: #000;
 }
 
-/* labels inside auth card */
-.auth-card .form-label {
-    color: #222222;
-    text-shadow: none;
-}
-
-/* shared auth button */
+/* main submit buttons (login & signup) */
 .btn-auth-primary {
     display: block;
-    margin: 20px auto 0;
+    margin: 24px auto 0;
     padding: 10px 32px;
-    border-radius: 999px;
+    border-radius: 6px;
     border: none;
+    background: #2563eb;
+    color: #ffffff;
     font-weight: 600;
     cursor: pointer;
     width: 100%;
-    max-width: 320px;
+    max-width: 350px;
 }
 
-/* login button: yellow with black text */
-.login-card .btn-auth-primary {
-    background: #ffd54a;
-    color: #000000;
+/* login button variant: yellow, black text */
+.btn-login {
+    background: #ffd447;
+    color: #000;
 }
 
-.login-card .btn-auth-primary:hover {
-    background: #facc15;
-}
-
-/* signup button: blue */
-.signup-card .btn-auth-primary,
-.signup-btn {
-    background: #2563eb;
-    color: #ffffff;
-}
-
-.signup-card .btn-auth-primary:hover,
-.signup-btn:hover {
-    background: #1d4ed8;
+.btn-auth-primary:hover {
+    filter: brightness(0.95);
 }
 
 .auth-footer-text {
@@ -307,7 +208,7 @@ body {
     margin: 0;
 }
 
-/* ==== HEADER LINKS (legacy – still fine) ==== */
+/* ==== LEGACY HEADER LINKS (safe) ==== */
 
 header nav a {
     color: #ffd966;
