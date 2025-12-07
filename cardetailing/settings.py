@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key-change-in-production")
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
-
+SECURE_CONTENT_TYPE_NOSNIFF = True
 ALLOWED_HOSTS = ["car-detailing-app-env.eba-ecj6emch.us-east-1.elasticbeanstalk.com", "12a82297e2654fe8a75ff5b45ac565ad.vfs.cloud9.us-east-1.amazonaws.com"] 
 CSRF_TRUSTED_ORIGINS = [
     "https://car-detailing-app-env.eba-ecj6emch.us-east-1.elasticbeanstalk.com",

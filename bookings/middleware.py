@@ -15,7 +15,7 @@ class SecurityHeadersMiddleware:
         response.setdefault("Cross-Origin-Opener-Policy", "same-origin")
         response.setdefault("Cross-Origin-Embedder-Policy", "require-corp")
         response.setdefault("Cross-Origin-Resource-Policy", "same-origin")
-
+        response.setdefault("Permissions-Policy","geolocation=(), microphone=(), camera=()",)
         # CSP
         csp = (
             "default-src 'self'; "
