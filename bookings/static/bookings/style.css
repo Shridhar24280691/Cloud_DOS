@@ -189,8 +189,8 @@ form textarea {
 
 /* Cancel button */
 .btn-booking-cancel {
-    background: #ffd444;
-    color: #000;
+    background: #ffffff;
+    color: #777777;
 }
 
 .btn-booking-cancel:hover {

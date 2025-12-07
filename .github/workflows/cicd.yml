@@ -84,7 +84,7 @@ jobs:
         run: |
           docker run --rm \
             -u zap \
-            ghcr.io/zaproxy/zaproxy:bare \
+            ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py \
               -t "${{ secrets.EB_APP_URL }}" \
               -a \
