@@ -93,10 +93,22 @@ STATICFILES_DIRS = [BASE_DIR / "bookings" / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+if DEBUG:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+else:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+# Prevent JavaScript from reading the cookies
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
+
+# Restrict cross-site sending of cookies
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+
+# Drop session when browser closes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 LOGIN_URL = "/accounts/login/"
