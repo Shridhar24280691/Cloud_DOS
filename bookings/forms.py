@@ -8,7 +8,7 @@ class BookingForm(forms.ModelForm):
     widget=forms.DateInput(attrs={"type": "date"})
     )
     
-    
+    # Required fields for fillings the booking form
     class Meta:
         model = Booking
         fields = [

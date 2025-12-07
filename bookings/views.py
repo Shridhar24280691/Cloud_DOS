@@ -16,12 +16,8 @@ SIGNUP_TEMPLATE = "bookings/signup.html"
 
 
 def _render_booking_form(request, form, title, post_url):
-    """
-    Internal helper to render the booking form.
-
-    Keeping this in one place avoids duplication and keeps
-    SonarQube happy about repeated code blocks.
-    """
+    # Internal helper to render the booking form, avoids duplication and keeps
+    
     context = {
         "form": form,
         "title": title,
@@ -32,7 +28,7 @@ def _render_booking_form(request, form, title, post_url):
 
 @require_GET
 def health(request):
-    """Simple health-check endpoint used by Elastic Beanstalk."""
+    # health-check endpoint for Elastic Beanstalk
     return JsonResponse({"status": "ok"})
 
 
@@ -40,27 +36,21 @@ def health(request):
 
 @require_GET
 def signup(request):
-    """
-    Public signup view (GET only).
-    Returns a blank signup form.
-    """
+    # Customer signup form view 
     form = UserCreationForm()
     return render(request, SIGNUP_TEMPLATE, {"form": form})
 
 
 @require_POST
 def signup_submit(request):
-    """
-    Handles signup form submission (POST only).
-    Creates a new user and redirects to booking list.
-    """
+    # Handles signup form submission of the customer.
     form = UserCreationForm(request.POST)
     if form.is_valid():
         user = form.save()
         login(request, user)
         return redirect("booking_list")
 
-    # invalid -> show form again with errors
+    # invalid show form again with errors if the form is not filled properly
     return render(request, SIGNUP_TEMPLATE, {"form": form})
 
 
@@ -69,9 +59,7 @@ def signup_submit(request):
 @login_required
 @require_GET
 def booking_list(request):
-    """
-    Booking list (GET only).
-    """
+    # Get Booking list
     if request.user.is_staff or request.user.is_superuser:
         bookings = Booking.objects.all().order_by(
             "-preferred_date", "-preferred_time_slot__start_time"
@@ -88,12 +76,10 @@ def booking_list(request):
 @login_required
 @require_GET
 def create_booking(request):
-    """
-    GET -> show booking creation form.
-    """
+    # show booking creation form.
     initial = {}
     if request.user.get_full_name():
-        initial["customer_name"] = request.user.get_full_name()
+        initial["customer_name"] = request.user.get_full_name() # pre-fill the customer name in the form
     else:
         initial["customer_name"] = request.user.username
 
@@ -108,7 +94,7 @@ def create_booking(request):
         {
             "form": form,
             "title": "Create Booking",
-            "post_url": reverse("create_booking_submit"),  # IMPORTANT
+            "post_url": reverse("create_booking_submit"),
         },
     )
 
@@ -116,10 +102,7 @@ def create_booking(request):
 @login_required
 @require_POST
 def create_booking_submit(request):
-    """
-    POST -> create a new booking for the logged-in user.
-    (No side effects on GET, which is what SonarQube expects.)
-    """
+    # create a new booking for the logged-in user.
     form = BookingForm(request.POST)
     if form.is_valid():
         booking = form.save(commit=False)
@@ -127,7 +110,7 @@ def create_booking_submit(request):
         booking.save()
         return redirect("booking_list")
 
-    # Invalid form -> show again
+    # Invalid form show again
     return _render_booking_form(
         request,
         form=form,
@@ -139,10 +122,8 @@ def create_booking_submit(request):
 @login_required
 @require_GET
 def edit_booking(request, pk):
-    """
-    GET -> show edit form.
-    """
-    booking = get_object_or_404(Booking, pk=pk)
+    # show edit form.
+    booking = get_object_or_404(Booking, pk=pk)# Display booking edit form prefilling data of booking
 
     if not (request.user.is_staff or booking.user == request.user):
         raise PermissionDenied
@@ -160,9 +141,7 @@ def edit_booking(request, pk):
 @login_required
 @require_POST
 def edit_booking_submit(request, pk):
-    """
-    POST -> save edits for the booking if owner or staff.
-    """
+    # save edits for the booking logged-in user
     booking = get_object_or_404(Booking, pk=pk)
 
     if not (request.user.is_staff or booking.user == request.user):
@@ -184,9 +163,7 @@ def edit_booking_submit(request, pk):
 @login_required
 @require_GET
 def delete_booking(request, pk):
-    """
-    GET -> show delete confirmation page.
-    """
+    # show delete confirmation page.
     booking = get_object_or_404(Booking, pk=pk)
 
     if not (request.user.is_staff or booking.user == request.user):
@@ -205,9 +182,7 @@ def delete_booking(request, pk):
 @login_required
 @require_POST
 def delete_booking_confirm(request, pk):
-    """
-    POST -> actually delete the booking (CSRF-protected form).
-    """
+    # shows actually delete the booking form
     booking = get_object_or_404(Booking, pk=pk)
 
     if not (request.user.is_staff or booking.user == request.user):
