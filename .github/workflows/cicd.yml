@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Checks out repository code onto the runner
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -80,7 +80,7 @@ jobs:
       - name: Pull OWASP ZAP Docker image
         run: docker pull ghcr.io/zaproxy/zaproxy:bare
 
-      - name: Run OWASP ZAP Baseline Scan (no artifacts)
+      - name: Run OWASP ZAP Baseline Scan
         run: |
           docker run --rm \
             -u zap \
